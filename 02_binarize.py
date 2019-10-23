@@ -10,13 +10,13 @@ def f(cmd):
 
 
 def parse_error(error):
-    sys.stderr.write("{}!\nUsage: 'python3 02_binarize.py <number_of_cores> <output_path>'\n".format(error))
+    sys.stderr.write("{}!\nUsage: 'python3 {} <number_of_cores> <output_path> <csv_file>'\n".format(error, sys.argv[0]))
     sys.exit(-1)
 
 if __name__ == '__main__':
     n = 1
 
-    if (len(sys.argv) != 3):
+    if (len(sys.argv) != 4):
         parse_error("Wrong number of inputs")
 
     try:
@@ -28,8 +28,10 @@ if __name__ == '__main__':
         parse_error("Output path is not a valid path")
 
     out_path = sys.argv[2]
+    csv_file = sys.argv[3]
+
     pool = Pool(n)
-    df = pd.read_csv("scans.csv")
+    df = pd.read_csv(csv_file)
     target_cols = df[["plot", "scan", "transform_matrix", "point_cloud"]]
     cmds = []
     for (i, (plot, scan, t, pc)) in target_cols.iterrows():

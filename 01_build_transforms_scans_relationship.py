@@ -37,7 +37,7 @@ def run(riegl_path, output_csv):
 
 
 def usage():
-    print("Usage: " + sys.argv[0] + " <RIEGL_RXP_and_DAT_matrices_path> <output_csv>")
+    sys.stderr.write("Usage: python3 " + sys.argv[0] + " <RIEGL_RXP_and_DAT_matrices_path> <output_csv>\n")
 
 def parse_error(err):
     sys.stderr.write("{}\n".format(err))
@@ -48,7 +48,7 @@ if __name__ == "__main__":
     if (len(sys.argv) != 3):
         parse_error("Wrong number of arguments!")
     
-    if (not os.path.isdir(argv[1])):
+    if (not os.path.isdir(sys.argv[1])):
         parse_error("<RIEGL_RXP_and_DAT_matrices_path> is not a valid path!")
 
     
