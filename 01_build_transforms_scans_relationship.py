@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from glob import glob
 import os
 import sys
@@ -27,12 +29,8 @@ def run(riegl_path, output_csv):
     # Group by plot and scan taking first for transform (transform files are repeated)
     transform_df = transform_df.groupby(["plot", "scan"])["transform_matrix"].first().reset_index()
 
-    # Group by plot and scan making a list of point cloud rxp files
-    grouped_by_folder_plot = scans_df.groupby(["plot", "scan"])["point_cloud"].apply(list).reset_index()
-    grouped_by_folder_plot["n_point_clouds"] = grouped_by_folder_plot["point_cloud"].apply(len)
-
     # Join transform and scans to know which transform matrix to apply to each scan
-    result = pd.merge(transform_df, grouped_by_folder_plot, how="inner", left_on=["plot","scan"], right_on=["plot","scan"])
+    result = pd.merge(transform_df, scans_df, how="inner", left_on=["plot","scan"], right_on=["plot","scan"])
     result.to_csv(output_csv, index=False)
 
 

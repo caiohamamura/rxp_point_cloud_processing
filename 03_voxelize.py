@@ -1,28 +1,31 @@
+#!/usr/bin/env python3
+
 from multiprocessing import Pool
 from glob import glob
 import pandas as pd
 import os
 import sys
+import subprocess
 
-global n = 4
-
+   
 
 def do_work(cmd):
-    print(os.popen(cmd).read())
+    subprocess.check_call(cmd, shell=True, stdout=sys.stdout, stderr=subprocess.STDOUT)
+    sys.stdout.flush()
 
 
 def parse_error(error):
-    sys.stderr.write("{}!\nUsage: 'python3 {} <input_path> <output_path> <csv_file> <n_cores>'\n".format(error, sys.argv[0]))
+    sys.stderr.write("{}!\nUsage: 'python3 {} <input_path> <output_path> <csv_file> <resolution> <n_cores>'\n".format(error, sys.argv[0]))
     sys.exit(-1)
 
 def input_args_checking_return_cores(n_args):
     n = 1
 
-    if (len(sys.argv) != n_args):
+    if (len(sys.argv) != n_args+1):
         parse_error("Wrong number of inputs")
 
     try:
-        n = int(sys.argv[4])
+        n = int(sys.argv[n_args])
     except:
         parse_error("Number of cores is not a number")
 
@@ -37,13 +40,14 @@ def input_args_checking_return_cores(n_args):
 
 
 if __name__ == '__main__':
-    n_args = 4
+    n_args = 5
 
     n_cores = input_args_checking_return_cores(n_args)
 
     in_path = sys.argv[1]
     out_path = sys.argv[2]
     csv_file = sys.argv[3]
+    res = sys.argv[4]
 
     # Start the pool
     pool = Pool(n_cores)
@@ -79,7 +83,7 @@ if __name__ == '__main__':
         zmin = z - ground_offset
         zmax = z + ground_offset + tree_max_height
         # Build the command
-        cmd = 'voxelTLS -input "{}" -res 0.75 -bounds {} {} {} {} {} {} -voxGap -output "{}"'.format(infile, xmin, ymin, zmin, xmax, ymax, zmax, outfile)    
+        cmd = 'voxelTLS -input "{}" -res {} -bounds {} {} {} {} {} {} -voxGap -output "{}"'.format(infile, res, xmin, ymin, zmin, xmax, ymax, zmax, outfile)    
         cmds.append(cmd)
     # Run the commands in parallel
     pool.map(do_work, cmds)

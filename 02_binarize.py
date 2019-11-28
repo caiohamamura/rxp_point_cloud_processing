@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from multiprocessing import Pool
 import pandas as pd
 import os
@@ -13,10 +15,11 @@ def parse_error(error):
     sys.stderr.write("{}!\nUsage: 'python3 {} <number_of_cores> <output_path> <csv_file>'\n".format(error, sys.argv[0]))
     sys.exit(-1)
 
-if __name__ == '__main__':
-    n = 1
 
-    if (len(sys.argv) != 4):
+if __name__ == '__main__':
+    n = 4
+
+    if (len(sys.argv) != n):
         parse_error("Wrong number of inputs")
 
     try:
@@ -35,10 +38,8 @@ if __name__ == '__main__':
     target_cols = df[["plot", "scan", "transform_matrix", "point_cloud"]]
     cmds = []
     for (i, (plot, scan, t, pc)) in target_cols.iterrows():
-        pc = eval(pc)
-        for p in pc:
-            basename = os.path.basename(p)[:-4]
-            cmd = 'readRXP -input "{}"  -trans "{}" -output "{}/{}_{}_{}.bin"'.format(p, t, out_path, plot, scan, basename)    
-            cmds.append(cmd)
+        basename = os.path.basename(pc)[:-4]
+        cmd = 'readRXP -input "{}"  -trans "{}" -output "{}/{}_{}_{}.bin"'.format(pc, t, out_path, plot, scan, basename)    
+        cmds.append(cmd)
     pool.map(f, cmds)
     
