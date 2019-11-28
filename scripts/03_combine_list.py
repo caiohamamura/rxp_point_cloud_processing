@@ -26,7 +26,6 @@ if __name__ == "__main__":
     inputPath = cmdargs.input
     inputPath = os.path.expanduser(os.path.normpath(inputPath))
     locations = glob(os.path.join(inputPath, "*"))
-    print(locations)
     cmds = []
     for location in locations:
         basename = os.path.basename(location)
