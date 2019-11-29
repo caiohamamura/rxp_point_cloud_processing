@@ -1,1 +1,7 @@
 .vscode
+*.txt
+*.gz
+*.csv
+*.ipynb
+.nfs*
+__pycache__
