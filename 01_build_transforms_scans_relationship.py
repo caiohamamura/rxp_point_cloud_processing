@@ -25,19 +25,27 @@ def getCmdArgs():
                    type=str,
                    help="Output csv file")
 
-    p.add_argument("-g", "--glob_filter", dest="glob_filter",
+    p.add_argument("-r", "--regex", dest="regex_match",
                    type=str,
-                   help="Glob patter filter up before SINGLESCANS \
-({}/**/SINGLESCANS)")
+                   default=".*",
+                   help="Regular expression to filter scans by pattern."
 
     return p
 
-def run(riegl_path, output_csv):
+def run(riegl_path, output_csv, regex_match):
     # Recursively look for matching transform matrices and rxp scans for each year
     y = '2018'
 
     # Read point clouds and transform matrices path for specified year as pandas series
     scans = pd.Series(glob('{}/**/SINGLESCANS/*[0-9].rxp'.format(riegl_path), recursive=True))
+    matches = scans.str.match(regex_match)
+
+    if (matches.sum() == 0):
+        print("The regex pattern don't match any file!", file=sys.stderr)
+        sys.exit(1)
+
+    scans = scans[matches]
+
     transforms = pd.Series(glob('{}/**/*.DAT'.format(riegl_path), recursive=True))
 
     # Extract plot and scan information for transform and point clouds
@@ -70,11 +78,11 @@ def parse_error(err):
     exit(-1)
 
 if __name__ == "__main__":
-    if (len(sys.argv) != 3):
-        parse_error("Wrong number of arguments!")
-    
+    parse = getCmdArgs()
+    args = parse.parse_args()
+
     if (not os.path.isdir(sys.argv[1])):
         parse_error("<RIEGL_RXP_and_DAT_matrices_path> is not a valid path!")
 
     
-    run(sys.argv[1], sys.argv[2])
+    run(args.riegl_path, args.output_csv, args.regex_match)
