@@ -5,3 +5,4 @@
 *.ipynb
 .nfs*
 __pycache__
+*.pts
