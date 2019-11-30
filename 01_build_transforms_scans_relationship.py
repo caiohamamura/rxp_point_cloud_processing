@@ -28,7 +28,7 @@ def getCmdArgs():
     p.add_argument("-r", "--regex", dest="regex_match",
                    type=str,
                    default=".*",
-                   help="Regular expression to filter scans by pattern."
+                   help="Regular expression to filter scans by pattern.")
 
     return p
 
