@@ -14,7 +14,7 @@ def getCmdArgs():
     '''
     p = argparse.ArgumentParser(description=(
         "Combines voxel PAI estimates from multiple scans"))
-    p.add_argument("--input", dest="input", default=" ",
+    p.add_argument("input", default=" ",
                    type=str, help=("Location of the voxelized"))
     cmdargs = p.parse_args()
     return cmdargs
@@ -34,5 +34,5 @@ if __name__ == "__main__":
     for cmd in cmds:
         try:
             do_work(cmd)
-        except:
+        except Exception:
             pass

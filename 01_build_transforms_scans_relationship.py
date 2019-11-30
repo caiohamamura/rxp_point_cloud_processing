@@ -7,12 +7,37 @@ from pathlib import Path
 import re
 import pandas as pd
 
+import argparse
+import subprocess
+
+
+def getCmdArgs():
+    '''
+    Get commdnaline arguments
+    '''
+    p = argparse.ArgumentParser(description=(
+        "Combines voxel PAI estimates from multiple scans"))
+    p.add_argument("riegl_path",
+                   type=str,
+                   help="Input path for where matrices and rxp files are")
+
+    p.add_argument("output_csv",
+                   type=str,
+                   help="Output csv file")
+
+    p.add_argument("-g", "--glob_filter", dest="glob_filter",
+                   type=str,
+                   help="Glob patter filter up before SINGLESCANS \
+({}/**/SINGLESCANS)")
+
+    return p
+
 def run(riegl_path, output_csv):
     # Recursively look for matching transform matrices and rxp scans for each year
     y = '2018'
 
     # Read point clouds and transform matrices path for specified year as pandas series
-    scans = pd.Series(glob('{}/**/SINGLESCANS/*.rxp'.format(riegl_path), recursive=True))
+    scans = pd.Series(glob('{}/**/SINGLESCANS/*[0-9].rxp'.format(riegl_path), recursive=True))
     transforms = pd.Series(glob('{}/**/*.DAT'.format(riegl_path), recursive=True))
 
     # Extract plot and scan information for transform and point clouds
@@ -32,6 +57,8 @@ def run(riegl_path, output_csv):
     # Join transform and scans to know which transform matrix to apply to each scan
     result = pd.merge(transform_df, scans_df, how="inner", left_on=["plot","scan"], right_on=["plot","scan"])
     result.to_csv(output_csv, index=False)
+
+
 
 
 def usage():

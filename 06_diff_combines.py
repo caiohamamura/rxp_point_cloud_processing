@@ -32,8 +32,8 @@ if __name__ == "__main__":
     spatial_columns = ["x",  "y",  "z"]
     colNames = [
         "x",  "y",  "z",  "mGapTo",  "maxGapTo",  "mGapIn",
-        "mPAIb_gapTo",  "mPAIrad",  "totBeam",  "bPAIb", "maxVol",
-        "volSamp", "mPAIb_volTrans", "mPAIb_nBeams"]
+        "mPAIb_mGapTo",  "mPAIrad",  "totBeam",  "bPAIb", "maxVol",
+        "volTrans", "mPAIb_volTrans", "mPAIb_totBeam"]
     data = pd.read_csv(first, sep=" ", skiprows=[0], names=colNames)
     data2 = pd.read_csv(second, sep=" ", skiprows=[0], names=colNames)
 
@@ -57,5 +57,4 @@ if __name__ == "__main__":
     dir_name = os.path.dirname(first)
     out_file_name = "{}/diff_{}-{}".format(dir_name, first_base, second_base)
     final.to_csv(out_file_name, sep=" ", index=False)
-    print("Done writing {}".format(
-        "diff_" + first_base + "-" + second_base + '.csv'))
+    print("Done writing {}".format(os.path.basename(out_file_name)))
