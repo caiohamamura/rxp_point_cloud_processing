@@ -78,7 +78,7 @@ def plotHistogram(outputPath, xVec, yVec, xVar):
         ax = fig()
         sns.distplot(yVec[maskVal], bins=1000, kde=False, norm_hist=False)
         plt.xlim(xlim[0], xlim[1])
-        plt.ylim(0, secondLargest*.2)
+        plt.ylim(0, secondLargest*.6)
         plt.xlabel(r"Diff LAIv")
         plt.ylabel(r"Frequency")
         output = re.sub(r"\.[^\.]*$", name + ".png", outputPath)
