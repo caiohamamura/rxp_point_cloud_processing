@@ -83,15 +83,15 @@ def plotHistogram(outputPath, xVec, yVec, xVar):
 
 if __name__ == "__main__":    
     args = getCmdArgs()
-yVar2 = "v2_" + args.yVar
+    yVar2 = "v2_" + args.yVar
 
-data = openData(args.inputData)
-yDiff = calculateDiff(data, args.yVar, yVar2) * args.resolution
+    data = openData(args.inputData)
+    yDiff = calculateDiff(data, args.yVar, yVar2) * args.resolution
 
-mask = getMaskNoData(data, args.yVar, yVar2, args.xVar)
-mask = mask & (np.abs(yDiff) <= args.maxDifference)
+    mask = getMaskNoData(data, args.yVar, yVar2, args.xVar)
+    mask = mask & (np.abs(yDiff) <= args.maxDifference)
 
-aggregatedX = aggregateX(data[args.xVar], data["v2_" + args.xVar])
-normalizedX = normalizeXVar(aggregatedX, args.nBins)
+    aggregatedX = aggregateX(data[args.xVar], data["v2_" + args.xVar])
+    normalizedX = normalizeXVar(aggregatedX, args.nBins)
 
     plotHistogram(args.histogram, normalizedX[mask], yDiff[mask], args.xVar)
