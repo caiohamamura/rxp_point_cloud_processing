@@ -30,6 +30,8 @@ def getCmdArgs():
                    type=int, help=("Number of bins to aggregate x data\n[100]"))
     p.add_argument("-d", "--max-y-difference", dest="maxDifference", default=20.0,
                    type=float, help=("Maximum y absolute difference\n[20]"))
+    p.add_argument("-v", "--vox-resolution", dest="resolution", default=0.5,
+                   type=float, help=("Voxel resolution\n[0.5]"))
     cmdargs = p.parse_args()
     return cmdargs
 
@@ -69,7 +71,7 @@ def plotMeanBias(outputPath, xVec, yVec, xVar):
     ax = fig()
     ax.axhline(y=0, linewidth=1, color="black", linestyle="--")
     sns.lineplot(x=xVec, y=yVec, ax=ax)
-    plt.ylabel(r"$\mu$ LADv difference")
+    plt.ylabel(r"$\mu$ LAIv difference")
     plt.xlabel(xVar)
     plt.savefig(outputPath)
     plt.close()
@@ -80,7 +82,7 @@ def plotRMSE(outputPath, xVec, yVec, xVar):
     uniques = np.unique(xVec)
     rmse = ndimage.standard_deviation(yVec, xVec, uniques)
     sns.lineplot(x=uniques, y=rmse, ax=ax)
-    plt.ylabel(r"RMSE LADv difference")
+    plt.ylabel(r"RMSE LAIv difference")
     plt.xlabel(xVar)
     plt.savefig(outputPath)
     plt.close()
@@ -90,7 +92,7 @@ if __name__ == "__main__":
     yVar2 = "v2_" + args.yVar
 
     data = openData(args.inputData)
-    yDiff = calculateDiff(data, args.yVar, yVar2)
+    yDiff = calculateDiff(data, args.yVar, yVar2) * args.resolution
 
     mask = getMaskNoData(data, args.yVar, yVar2, args.xVar)
     mask = mask & (np.abs(yDiff) <= args.maxDifference)
