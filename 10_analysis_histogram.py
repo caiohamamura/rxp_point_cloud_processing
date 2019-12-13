@@ -69,7 +69,7 @@ def plotHistogram(outputPath, xVec, yVec, xVar):
     # Plot mean + error
     rebinned = np.round(xVec / 5).astype(np.int)
     uniques = np.unique(rebinned)
-    hist = np.histogram(yVec[maskVal], bins=1000)
+    hist = np.histogram(yVec, bins=1000)
     secondLargest = np.partition(hist[0], -2)[-2]
     xlim = [np.quantile(yVec, 0.001), np.quantile(yVec, 0.999)]
     for i in uniques:
