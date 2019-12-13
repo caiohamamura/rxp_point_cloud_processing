@@ -73,11 +73,13 @@ def plotHistogram(outputPath, xVec, yVec, xVar):
         maskVal = rebinned == i
         name = str(i*5)
         ax = fig()
-        hist = np.histogram(yVec[maskVal], bins=20)
+        hist = np.histogram(yVec[maskVal], bins=1000)
         secondLargest = np.partition(hist[0], -2)[-2]
-        sns.distplot(yVec[maskVal], bins=20)
-        plt.ylim(0, secondLargest*1.5)
-        plt.xlabel(r"Diff mPAIb")
+        sns.distplot(yVec[maskVal], bins=1000, kde=False, norm_hist=False)
+        plt.xlim(np.quantile(yVec[maskVal], 0.001), np.quantile(yVec[maskVal], 0.999))
+        plt.ylim(0, secondLargest*1.2)
+        plt.xlabel(r"Diff LAIv")
+        plt.ylabel(r"Frequency")
         output = re.sub(r"\.[^\.]*$", name + ".png", outputPath)
         plt.savefig(output)
         plt.close()
