@@ -3,6 +3,7 @@ import os
 import pandas as pd
 import numpy as np
 from matplotlib import pyplot as plt
+matplotlib.use('Agg')
 import seaborn as sns
 from scipy import ndimage
 import argparse
