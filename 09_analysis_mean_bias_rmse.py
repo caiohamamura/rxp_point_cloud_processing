@@ -55,7 +55,7 @@ def getMaskNoData(data, yVar, yVar2, xVar):
 
 def normalizeXVar(xVec, nBins):
     minVal = xVec.min()
-    maxVal = np.quantile(xVec, 0.98)
+    maxVal = np.quantile(xVec, 1)
     normalized = np.floor(
         nBins*(xVec-minVal)/(maxVal-minVal)).astype(np.uint)
     normalized[xVec > maxVal] = nBins
