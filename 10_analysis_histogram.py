@@ -69,16 +69,17 @@ def plotHistogram(outputPath, xVec, yVec, xVar):
     # Plot mean + error
     rebinned = np.round(xVec / 5).astype(np.int)
     uniques = np.unique(rebinned)
-    hist = np.histogram(yVec, bins=1000)
+    maskVal = rebinned == uniques[1]
+    hist = np.histogram(yVec[maskVal], bins=1000)
     secondLargest = np.partition(hist[0], -2)[-2]
-    xlim = [np.quantile(yVec, 0.001), np.quantile(yVec, 0.999)]
+    xlim = [np.quantile(yVec[maskVal], 0.001), np.quantile(yVec[maskVal], 0.999)]
     for i in uniques:
         maskVal = rebinned == i
         name = str(i*5)
         ax = fig()
         sns.distplot(yVec[maskVal], bins=1000, kde=False, norm_hist=False)
         plt.xlim(xlim[0], xlim[1])
-        plt.ylim(0, secondLargest*.06)
+        plt.ylim(0, secondLargest*1.2)
         plt.xlabel(r"Diff LAIv")
         plt.ylabel(r"Frequency")
         output = re.sub(r"\.[^\.]*$", name + ".png", outputPath)
