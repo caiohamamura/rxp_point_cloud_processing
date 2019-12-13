@@ -77,8 +77,9 @@ def plotMeanBias(outputPath, xVec, yVec, xVar):
 def plotRMSE(outputPath, xVec, yVec, xVar):
     # Plot std
     ax = fig()
-    rmse = ndimage.standard_deviation(yVec, xVec, np.unique(xVec))
-    sns.lineplot(x=xVec, y=rmse, ax=ax)
+    uniques = np.unique(xVec)
+    rmse = ndimage.standard_deviation(yVec, xVec, uniques)
+    sns.lineplot(x=uniques, y=rmse, ax=ax)
     plt.ylabel(r"RMSE LADv difference")
     plt.xlabel(xVar)
     plt.savefig(outputPath)
@@ -92,7 +93,7 @@ if __name__ == "__main__":
     yDiff = calculateDiff(data, args.yVar, yVar2)
 
     mask = getMaskNoData(data, args.yVar, yVar2, args.xVar)
-    mask = mask & (yDiff <= args.maxDifference)
+    mask = mask & (np.abs(yDiff) <= args.maxDifference)
 
     aggregatedX = aggregateX(data[args.xVar], data["v2_" + args.xVar])
     normalizedX = normalizeXVar(aggregatedX, args.nBins)
