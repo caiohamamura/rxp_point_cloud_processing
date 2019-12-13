@@ -73,10 +73,9 @@ def plotHistogram(outputPath, xVec, yVec, xVar):
         maskVal = rebinned == i
         name = str(i*5)
         ax = fig()
-        hist = np.histogram(yVec[maskVal], bins=100)
+        hist = np.histogram(yVec[maskVal], bins=20)
         secondLargest = np.partition(hist[0], -2)[-2]
-        sns.distplot(yVec[maskVal], bins=100)
-        plt.xlim((-1,1))
+        sns.distplot(yVec[maskVal], bins=20)
         plt.ylim(0, secondLargest*1.5)
         plt.xlabel(r"Diff mPAIb")
         output = re.sub(r"\.[^\.]*$", name + ".png", outputPath)
